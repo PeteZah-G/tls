@@ -35,7 +35,7 @@ app.get('/', async (req, res) => {
   }
 });
 
-const PORT = config.port || 5555;
+const PORT = config.port || 3001;
 app.listen(PORT, () => {
   console.log(`TLS server is running on port ${PORT}`);
 });
