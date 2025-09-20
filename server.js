@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const configPath = path.resolve(__dirname, './config.json');
-const domainsPath = path.resolve(__dirname, './domains.json');
+const domainsPath = path.resolve(__dirname, './alldomains.json');
 
 const config = JSON.parse(await fs.readFile(configPath, 'utf8'));
 const app = express();
