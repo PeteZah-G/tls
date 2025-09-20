@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 const configPath = path.resolve(__dirname, './config.json');
 const domainsPath = path.resolve(__dirname, './domains.json');
 
@@ -39,13 +40,13 @@ app.get('/', async (req, res) => {
     return res.status(400).send('Disallowed');
   }
 
+  // Log the requested domain immediately
+  await logDomain(domain);
+
   try {
     const addresses = await dns.resolve4(domain);
     const predefinedIPs = Array.isArray(config.ips) ? config.ips : [];
     const isValid = predefinedIPs.some(ip => addresses.includes(ip));
-
-    // Log the domain regardless of validation result
-    await logDomain(domain);
 
     if (isValid) {
       return res.status(200).send('DNS is pointing to the IP');
@@ -53,7 +54,6 @@ app.get('/', async (req, res) => {
       return res.status(403).send('DNS is not pointing to the IP');
     }
   } catch {
-    await logDomain(domain);
     return res.status(403).send('DNS resolution failed');
   }
 });
