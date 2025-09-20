@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const configPath = path.resolve(__dirname, './config.json');
-const domainsPath = path.resolve(__dirname, './alldomains.json');
+const domainsPath = path.resolve(__dirname, './fulldomains.json');
 
 const config = JSON.parse(await fs.readFile(configPath, 'utf8'));
 const app = express();
@@ -24,6 +24,7 @@ async function logDomain(domain) {
   try {
     const data = await fs.readFile(domainsPath, 'utf8');
     const domains = new Set(JSON.parse(data));
+
     if (!domains.has(domain)) {
       domains.add(domain);
       await fs.writeFile(domainsPath, JSON.stringify([...domains], null, 2));
@@ -40,7 +41,7 @@ app.get('/', async (req, res) => {
     return res.status(400).send('Disallowed');
   }
 
-  // Log the requested domain immediately
+  // **Log the domain directly** — do not log IPs
   await logDomain(domain);
 
   try {
